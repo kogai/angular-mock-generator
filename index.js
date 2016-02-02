@@ -17,7 +17,7 @@ function Mock(moduleName, pathToSrc, isDebug) {
   this.pkgs = {};
   this.pkgs.angular = {
     stream: isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.angular.js`),
-    template: `angular.module('${this.moduleName}', []).value('${this.nameSpace}', ${JSON.stringify(this.src)});`,
+    template: `angular.module('${this.moduleName}').value('${this.nameSpace}', ${JSON.stringify(this.src)});`,
   };
   this.pkgs.nodejs = {
     stream: isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.node.js`),
