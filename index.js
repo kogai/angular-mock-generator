@@ -18,7 +18,7 @@ function Mock(moduleName, pathToSrc, isDebug) {
 
   this.readable = new stream.Readable();
 
-  this.tempateAngular = `angular.module('${this.moduleName}').value('${this.nameSpace}', ${JSON.stringify(this.src)});`;
+  this.tempateAngular = `angular.module('${this.moduleName}', []).value('${this.nameSpace}', ${JSON.stringify(this.src)});`;
   this.tempateNodejs = `module.exports = function() {${this.tempateAngular}}`;
 }
 
