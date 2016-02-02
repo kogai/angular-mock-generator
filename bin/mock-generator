@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+const glob = require('glob');
+
+const Mock = require('../');
+const argvs = process.argv.slice(2);
+
+if (argvs.length === 0) {
+  throw new Error('mock-generator need configuration');
+}
+
+const conf = require(argvs[0]);
+
+conf.files.forEach((f)=> {
+  glob(f, (err, files)=> {
+    if (err) {
+      throw new Error(err);
+    }
+    files
+    .filter((file)=> !file.match(/\.mock\.angular\.js|mock\.node\.js/))
+    .forEach((file)=> {
+      const m = new Mock(conf.moduleName, file, conf.isDebug);
+      m.write();
+    });
+  });
+});

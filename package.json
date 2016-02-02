@@ -1,0 +1,17 @@
+{
+  "name": "@kogai/angular-mock-generator",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "camel-case": "^1.2.2",
+    "character-parser": "^2.1.1",
+    "glob": "^6.0.4",
+    "through2": "^2.0.0"
+  }
+}
