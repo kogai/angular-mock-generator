@@ -8,29 +8,35 @@ const camelCase = require('camel-case');
 function Mock(moduleName, pathToSrc, isDebug) {
   this.moduleName = moduleName;
   this.pathToSrc = pathToSrc;
-  this.distStreams = [
-    isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.angular.js`),
-    isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.node.js`),
-  ];
 
   this.nameSpace = camelCase(this.pathToSrc);
   this.src = require(pathToSrc);
 
   this.readable = new stream.Readable();
 
-  this.tempateAngular = `angular.module('${this.moduleName}', []).value('${this.nameSpace}', ${JSON.stringify(this.src)});`;
-  this.tempateNodejs = `module.exports = function() {${this.tempateAngular}}`;
+  this.pkgs = {};
+  this.pkgs.angular = {
+    stream: isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.angular.js`),
+    template: `angular.module('${this.moduleName}', []).value('${this.nameSpace}', ${JSON.stringify(this.src)});`,
+  };
+  this.pkgs.nodejs = {
+    stream: isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.node.js`),
+    template: `module.exports = function() {${this.pkgs.angular.template}}`,
+  };
+  this.keys = Object.keys(this.pkgs);
 }
 
-Mock.prototype.write = function(tempateName) {
-  this.distStreams.forEach((s, i)=> {
+function noop() {}
+
+Mock.prototype.write = function() {
+  this.keys.forEach((key)=> {
     const templateStream = new stream.Readable();
 
-    templateStream._read = function noop() {};
-    templateStream.push(i === 0 ? this.tempateNodejs : this.tempateAngular);
+    templateStream._read = noop;
+    templateStream.push(this.pkgs[key].template);
     templateStream.push(null);
 
-    templateStream.pipe(s);
+    templateStream.pipe(this.pkgs[key].stream);
   });
 };
 
