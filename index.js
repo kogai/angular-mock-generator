@@ -14,19 +14,26 @@ function Mock(moduleName, pathToSrc, isDebug) {
 
   this.readable = new stream.Readable();
 
+  const fileName
   this.pkgs = {};
   this.pkgs.angular = {
-    stream: isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.angular.js`),
+    stream: isDebug ? process.stdout : fs.createWriteStream(`${rename(pathToSrc, 'angular')}`),
     template: `angular.module('${this.moduleName}').value('${this.nameSpace}', ${JSON.stringify(this.src)});`,
   };
   this.pkgs.nodejs = {
-    stream: isDebug ? process.stdout : fs.createWriteStream(`${pathToSrc}.mock.node.js`),
+    stream: isDebug ? process.stdout : fs.createWriteStream(`${rename(pathToSrc, 'node')}`),
     template: `module.exports = function() {${this.pkgs.angular.template}}`,
   };
   this.keys = Object.keys(this.pkgs);
 }
 
 function noop() {}
+
+function rename (srcName, addition) {
+  const parsed = path.parse(srcName);
+  return [parsed.dir, '/', parsed.name, '.', addition, parsed.ext].join('');
+}
+
 
 Mock.prototype.write = function() {
   this.keys.forEach((key)=> {
