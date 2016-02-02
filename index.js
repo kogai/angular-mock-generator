@@ -9,16 +9,16 @@ function Mock(moduleName, pathToSrc, isDebug) {
   this.moduleName = moduleName;
   this.pathToSrc = pathToSrc;
 
-  this.nameSpace = camelCase(this.pathToSrc);
+  const parsed = path.parse(this.pathToSrc);
+  const nameSpace = camelCase(parsed.dir);
   this.src = require(pathToSrc);
 
   this.readable = new stream.Readable();
 
-  const fileName
   this.pkgs = {};
   this.pkgs.angular = {
     stream: isDebug ? process.stdout : fs.createWriteStream(`${rename(pathToSrc, 'angular')}`),
-    template: `angular.module('${this.moduleName}').value('${this.nameSpace}', ${JSON.stringify(this.src)});`,
+    template: `angular.module('${this.moduleName}').value('${nameSpace}', ${JSON.stringify(this.src)});`,
   };
   this.pkgs.nodejs = {
     stream: isDebug ? process.stdout : fs.createWriteStream(`${rename(pathToSrc, 'node')}`),
