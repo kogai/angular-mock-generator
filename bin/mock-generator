@@ -17,7 +17,7 @@ conf.files.forEach((f)=> {
       throw new Error(err);
     }
     files
-    .filter((file)=> !file.match(/\.mock\.angular\.js|mock\.node\.js/))
+    .filter((file)=> !file.match(/angular\.js|node\.js/))
     .forEach((file)=> {
       const m = new Mock(conf.moduleName, file, conf.isDebug);
       m.write();

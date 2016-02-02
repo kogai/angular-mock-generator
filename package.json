@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npm version patch && npm publish --access public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": "./bin/mock-generator",
