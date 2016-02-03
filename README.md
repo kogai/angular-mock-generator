@@ -3,7 +3,7 @@
 ## 目的
 
 APIレスポンスを模したオブジェクトから、`Angular.js`/`Node.js`のモジュールシステムでそれぞれ使用できるモックを生成する  
-`Angular.js`の`Value Service`として生成され、ベースとなったファイルへのパスから`Service`としての名前を決定する
+`Angular.js`の`Value Service`として生成され、ベースとなったファイルへのパスから`Service`としての名前を`camelCase`で決定する
 
 ```js
 // /path/to/base/file/my-file.js
@@ -13,11 +13,13 @@ module.exports = {
 };
 
 // Angular.jsのモジュールとして直接ブラウザに読み込ませるためのモック
+// /path/to/base/file/my-file.angular.js として生成される
 angular.module('httpBackendMock').value('pathToBaseFile', {
   "foo": "bar"
 });
 
 // ProtractorのaddMockModuleメソッドに追加するためのモック
+// /path/to/base/file/my-file.node.js として生成される
 module.exports = function() {
   angular.module('httpBackendMock').value('pathToBaseFile', {
     "foo": "bar"
